@@ -1,0 +1,14 @@
+
+spark-submit --master=local \
+    --files "mykeystore.jks" \
+    --verbose \
+    ./script.py
+
+
+spark-submit --master=local \
+    --files "jaas.conf,mykeystore.jks" \
+    --conf "spark.executor.extraJavaOptions=-Djava.security.auth.login.config=jaas.conf" \
+    --conf "spark.driver.extraJavaOptions=-Djava.security.auth.login.config=jaas.conf" \
+    --verbose \
+    ./test4.py
+    
