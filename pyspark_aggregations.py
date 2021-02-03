@@ -17,13 +17,13 @@ df = spark \
 		.load()
 
 windowedDf = df.groupBy(window("timestamp", "5 seconds", "5 seconds")) \
-	.sum()
+				.sum()
 
 
 query = windowedDf.writeStream \
 			.outputMode("complete") \
 			.format("console") \
-      .option("truncate", "false") \
+      		.option("truncate", "false") \
 			.start() 
 
 query.awaitTermination()
