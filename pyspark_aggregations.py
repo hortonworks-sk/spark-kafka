@@ -16,14 +16,21 @@ df = spark \
 		.option("rowsPerSecond", 100) \
 		.load()
 
+
 windowedDf = df.groupBy(window("timestamp", "5 seconds", "5 seconds")) \
-				.sum()
+		.agg(expr("sum(value) as total"))
+
+windowedDf.createOrReplaceTempView("stream")
+
+windowToTimeDF = spark.sql("select window.end, total from stream")
+
+windowToTimeDF.printSchema()
 
 
-query = windowedDf.writeStream \
+query = windowToTimeDF.writeStream \
 			.outputMode("complete") \
 			.format("console") \
-      		.option("truncate", "false") \
+      			.option("truncate", "false") \
 			.start() 
 
 query.awaitTermination()
